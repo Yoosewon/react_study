@@ -1,8 +1,8 @@
 "use client"
 
-import style from './followRecommend.module.css';
+import style from './followRecommendSection.module.css';
 
-export default function FollowRecommend() {
+export default function FollowRecommendSection() {
     const onFollow = () => {};
 
     const user = {
