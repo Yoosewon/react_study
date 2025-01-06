@@ -1,29 +1,33 @@
 "use client";
 
 import style from './signup.module.css';
-import BackButton from "./BackButton";
+import onSubmit from '../_lib/signup';
+import BackButton from "@/app/(beforeLogin)/_component/BackButton";
+import { useActionState } from 'react';
+import Form from "next/form";
+
+function showMessage(message: string | null | undefined) {
+    if (message === 'no_id') {
+        return '아이디를 입력하세요.';
+    }
+    if (message === 'no_name') {
+        return '닉네임을 입력하세요.';
+    }
+    if (message === 'no_password') {
+        return '비밀번호를 입력하세요.';
+    }
+    if (message === 'no_image') {
+        return '이미지를 업로드하세요.';
+    }
+    if (message === 'user_exists') {
+        return '이미 사용 중인 아이디입니다.';
+    }
+    return '';
+}
 
 export default function SignupModal() {
-    const onSubmit: FormEventHandler = (e) => {
-        e.preventDefault();
-        fetch('http://localhost:9090/api/users', {
-            method: 'post',
-            body: JSON.stringify({
-                id,
-                nickname,
-                image,
-                password,
-            }),
-            credentials: 'include',
-        }).then((response: Response) => {
-            console.log(response.status);
-            if (response.status === 200) {
-                router.replace('/home');
-            }
-        }).catch((err) => {
-            console.error(err);
-        });
-    }
+    const [state, formAction, isPending] = useActionState(onSubmit, { message: null });
+    // const { pending } = useFormStatus();
 
     return (
         <>
@@ -33,7 +37,7 @@ export default function SignupModal() {
                         <BackButton />
                         <div>계정을 생성하세요.</div>
                     </div>
-                    <form>
+                    <Form action={formAction}>
                         <div className={style.modalBody}>
                             <div className={style.inputDiv}>
                                 <label className={style.inputLabel} htmlFor="id">아이디</label>
@@ -60,9 +64,10 @@ export default function SignupModal() {
                             </div>
                         </div>
                         <div className={style.modalFooter}>
-                            <button type="submit" className={style.actionButton} >가입하기</button>
+                            <button type="submit" className={style.actionButton} disabled={isPending}>가입하기</button>
+                            <div className={style.error}>{showMessage(state?.message)}</div>
                         </div>
-                    </form>
+                    </Form>
                 </div>
             </div>
         </>)
