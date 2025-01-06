@@ -7,29 +7,26 @@ import ActionButtons from "@/app/(afterLogin)/_component/ActionButtons";
 import PostArticle from "@/app/(afterLogin)/_component/PostArticle";
 import PostImages from "@/app/(afterLogin)/_component/PostImages";
 import { faker } from '@faker-js/faker';
+import { Post as IPost } from '@/model/Post';
 
 dayjs.locale('ko');
 dayjs.extend(relativeTime)
 
-export default function Post() {
-    const target = {
-        postId: 1,
-        User: {
-            id: 'elonmusk',
-            nickname: 'Elon Musk',
-            image: '/yRsRRjGO.jpg',
-        },
-        content: 'Time to Get Back to Work',
-        createdAt: new Date(),
-        Images: [] as any[],
-    }
+type Props = {
+    noImage?: boolean;
+    post: IPost;
+}
 
-    if(Math.random() > 0.5) {
+
+export default function Post({ noImage, post }: Props) {
+    const target = post;
+
+    if (Math.random() > 0.5 && !noImage) {
         target.Images.push(
             {imageId: 1, link: faker.image.urlLoremFlickr()},
             {imageId: 2, link: faker.image.urlLoremFlickr()},
             {imageId: 3, link: faker.image.urlLoremFlickr()},
-            {imageId: 4, link: faker.image.urlLoremFlickr()}
+            {imageId: 4, link: faker.image.urlLoremFlickr()},
         )
     }
 
